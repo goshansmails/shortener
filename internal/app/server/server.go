@@ -26,12 +26,6 @@ func wrappedGetIDHandler(s *Server) func(resp http.ResponseWriter, req *http.Req
 
 	return func(resp http.ResponseWriter, req *http.Request) {
 
-		contentType := req.Header.Get("Content-Type")
-		if contentType != "text/plain" {
-			http.Error(resp, "", http.StatusBadRequest)
-			return
-		}
-
 		body, err := io.ReadAll(req.Body)
 		if err != nil {
 			resp.WriteHeader(http.StatusInternalServerError)
@@ -75,14 +69,14 @@ func wrappedGetURLHandler(s *Server) func(resp http.ResponseWriter, req *http.Re
 
 func mainHandlerWrapped(s *Server) func(resp http.ResponseWriter, req *http.Request) {
 
-	getIdHandler := wrappedGetIDHandler(s)
+	getIDHandler := wrappedGetIDHandler(s)
 	getURLHandler := wrappedGetURLHandler(s)
 
 	return func(resp http.ResponseWriter, req *http.Request) {
 
 		if req.URL.Path == "/" {
 			if req.Method == http.MethodPost {
-				getIdHandler(resp, req)
+				getIDHandler(resp, req)
 			} else {
 				http.Error(resp, "", http.StatusBadRequest)
 			}
