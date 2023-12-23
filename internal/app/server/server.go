@@ -22,7 +22,7 @@ func New(storage *storage.Storage) *Server {
 
 const linkFormat = "http://localhost:8080/%d"
 
-func wrappedGetIdHandler(s *Server) func(resp http.ResponseWriter, req *http.Request) {
+func wrappedGetIDHandler(s *Server) func(resp http.ResponseWriter, req *http.Request) {
 
 	return func(resp http.ResponseWriter, req *http.Request) {
 
@@ -39,7 +39,7 @@ func wrappedGetIdHandler(s *Server) func(resp http.ResponseWriter, req *http.Req
 		}
 
 		urlToSave := string(body)
-		id, err := s.storage.GetId(urlToSave)
+		id, err := s.storage.GetID(urlToSave)
 		if err != nil {
 			resp.WriteHeader(http.StatusInternalServerError)
 			return
@@ -75,7 +75,7 @@ func wrappedGetURLHandler(s *Server) func(resp http.ResponseWriter, req *http.Re
 
 func mainHandlerWrapped(s *Server) func(resp http.ResponseWriter, req *http.Request) {
 
-	getIdHandler := wrappedGetIdHandler(s)
+	getIdHandler := wrappedGetIDHandler(s)
 	getURLHandler := wrappedGetURLHandler(s)
 
 	return func(resp http.ResponseWriter, req *http.Request) {

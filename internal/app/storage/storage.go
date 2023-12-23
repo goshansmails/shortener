@@ -7,9 +7,9 @@ import (
 
 type Storage struct {
 	idForURL map[string]int
-	urlForId map[int]string
+	urlForID map[int]string
 
-	curId int
+	curID int
 
 	guard sync.RWMutex
 }
@@ -17,12 +17,12 @@ type Storage struct {
 func New() *Storage {
 	return &Storage{
 		idForURL: make(map[string]int),
-		urlForId: make(map[int]string),
-		curId:    1,
+		urlForID: make(map[int]string),
+		curID:    1,
 	}
 }
 
-func (s *Storage) GetId(url string) (int, error) {
+func (s *Storage) GetID(url string) (int, error) {
 
 	s.guard.Lock()
 	defer s.guard.Unlock()
@@ -31,11 +31,11 @@ func (s *Storage) GetId(url string) (int, error) {
 		return id, nil
 	}
 
-	id := s.curId
-	s.curId++
+	id := s.curID
+	s.curID++
 
 	s.idForURL[url] = id
-	s.urlForId[id] = url
+	s.urlForID[id] = url
 
 	return id, nil
 }
@@ -45,7 +45,7 @@ func (s *Storage) GetURL(id int) (string, error) {
 	s.guard.RLock()
 	defer s.guard.RUnlock()
 
-	url, found := s.urlForId[id]
+	url, found := s.urlForID[id]
 	if !found {
 		return "", errors.New("not found")
 	}
