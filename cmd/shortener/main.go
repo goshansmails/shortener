@@ -2,22 +2,17 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"os"
-)
 
-func empty(resp http.ResponseWriter, req *http.Request) {
-	resp.Write([]byte("hello"))
-}
+	"github.com/goshansmails/shortener/internal/app/server"
+	"github.com/goshansmails/shortener/internal/app/storage"
+)
 
 func main() {
 
-	mux := http.NewServeMux()
-	mux.HandleFunc(`/`, empty)
-
-	err := http.ListenAndServe(`:8080`, mux)
-	if err != nil {
-		fmt.Printf("cat't run server: %s\n", err.Error())
+	s := server.New(storage.New())
+	if err := s.Run(); err != nil {
+		fmt.Println("can't run server: ", err)
 		os.Exit(1)
 	}
 }
