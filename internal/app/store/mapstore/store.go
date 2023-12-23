@@ -1,11 +1,11 @@
-package storage
+package mapstore
 
 import (
 	"errors"
 	"sync"
 )
 
-type Storage struct {
+type Store struct {
 	idForURL map[string]int
 	urlForID map[int]string
 
@@ -14,15 +14,15 @@ type Storage struct {
 	guard sync.RWMutex
 }
 
-func New() *Storage {
-	return &Storage{
+func New() *Store {
+	return &Store{
 		idForURL: make(map[string]int),
 		urlForID: make(map[int]string),
 		curID:    1,
 	}
 }
 
-func (s *Storage) GetID(url string) (int, error) {
+func (s *Store) GetID(url string) (int, error) {
 
 	s.guard.Lock()
 	defer s.guard.Unlock()
@@ -40,7 +40,7 @@ func (s *Storage) GetID(url string) (int, error) {
 	return id, nil
 }
 
-func (s *Storage) GetURL(id int) (string, error) {
+func (s *Store) GetURL(id int) (string, error) {
 
 	s.guard.RLock()
 	defer s.guard.RUnlock()

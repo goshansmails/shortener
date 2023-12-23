@@ -7,16 +7,16 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/goshansmails/shortener/internal/app/storage"
+	"github.com/goshansmails/shortener/internal/app/store"
 )
 
 type Server struct {
-	storage *storage.Storage
+	store store.Store
 }
 
-func New(storage *storage.Storage) *Server {
+func New(store store.Store) *Server {
 	return &Server{
-		storage: storage,
+		store: store,
 	}
 }
 
@@ -33,7 +33,7 @@ func wrappedGetIDHandler(s *Server) func(resp http.ResponseWriter, req *http.Req
 		}
 
 		urlToSave := string(body)
-		id, err := s.storage.GetID(urlToSave)
+		id, err := s.store.GetID(urlToSave)
 		if err != nil {
 			resp.WriteHeader(http.StatusInternalServerError)
 			return
@@ -56,7 +56,7 @@ func wrappedGetURLHandler(s *Server) func(resp http.ResponseWriter, req *http.Re
 			return
 		}
 
-		url, err := s.storage.GetURL(id)
+		url, err := s.store.GetURL(id)
 		if err != nil {
 			resp.WriteHeader(http.StatusBadRequest)
 			return
