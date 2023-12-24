@@ -111,6 +111,8 @@ func TestGetURLHandler(t *testing.T) {
 			getURLHandler(w, req)
 
 			resp := w.Result()
+			defer resp.Body.Close()
+
 			if test.ok {
 				require.Equal(t, http.StatusTemporaryRedirect, resp.StatusCode)
 				require.Equal(t, test.desiredLink, resp.Header.Get("Location"))
