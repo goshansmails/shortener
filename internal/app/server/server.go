@@ -3,6 +3,7 @@ package server
 import (
 	"net/http"
 
+	"github.com/go-chi/chi"
 	"github.com/goshansmails/shortener/internal/app/store"
 )
 
@@ -18,8 +19,12 @@ func New(store store.Store) *Server {
 
 func (s *Server) Run() error {
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/", mainHandlerWrapped(s))
+	getIDHandler := wrappedGetIDHandler(s.store)
+	getURLHandler := wrappedGetURLHandler(s.store)
 
-	return http.ListenAndServe(`:8080`, mux)
+	r := chi.NewRouter()
+	r.Post("/", getIDHandler)
+	r.Get("/*", getURLHandler)
+
+	return http.ListenAndServe(`:8080`, r)
 }
