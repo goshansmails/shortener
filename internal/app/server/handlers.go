@@ -6,11 +6,13 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/goshansmails/shortener/internal/app/store"
 )
 
 const linkFormat = "http://localhost:8080/%d"
 
-func wrappedGetIDHandler(s *Server) func(resp http.ResponseWriter, req *http.Request) {
+func wrappedGetIDHandler(s store.Store) func(resp http.ResponseWriter, req *http.Request) {
 
 	return func(resp http.ResponseWriter, req *http.Request) {
 
@@ -26,7 +28,7 @@ func wrappedGetIDHandler(s *Server) func(resp http.ResponseWriter, req *http.Req
 		}
 
 		urlToSave := string(body)
-		id, err := s.store.GetID(urlToSave)
+		id, err := s.GetID(urlToSave)
 		if err != nil {
 			resp.WriteHeader(http.StatusInternalServerError)
 			return
@@ -38,7 +40,7 @@ func wrappedGetIDHandler(s *Server) func(resp http.ResponseWriter, req *http.Req
 	}
 }
 
-func wrappedGetURLHandler(s *Server) func(resp http.ResponseWriter, req *http.Request) {
+func wrappedGetURLHandler(s store.Store) func(resp http.ResponseWriter, req *http.Request) {
 
 	return func(resp http.ResponseWriter, req *http.Request) {
 
@@ -49,7 +51,7 @@ func wrappedGetURLHandler(s *Server) func(resp http.ResponseWriter, req *http.Re
 			return
 		}
 
-		url, err := s.store.GetURL(id)
+		url, err := s.GetURL(id)
 		if err != nil {
 			resp.WriteHeader(http.StatusBadRequest)
 			return
@@ -62,8 +64,8 @@ func wrappedGetURLHandler(s *Server) func(resp http.ResponseWriter, req *http.Re
 
 func mainHandlerWrapped(s *Server) func(resp http.ResponseWriter, req *http.Request) {
 
-	getIDHandler := wrappedGetIDHandler(s)
-	getURLHandler := wrappedGetURLHandler(s)
+	getIDHandler := wrappedGetIDHandler(s.store)
+	getURLHandler := wrappedGetURLHandler(s.store)
 
 	return func(resp http.ResponseWriter, req *http.Request) {
 
