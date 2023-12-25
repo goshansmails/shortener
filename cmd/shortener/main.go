@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	addr    = flag.String("a", "localhost:8080", "address to listen")
-	baseURL = flag.String("b", "localhost:8080", "base URL for redirection")
+	addr    = flag.String("a", "0.0.0.0:8080", "address to listen")
+	baseURL = flag.String("b", "http://127.0.0.1:8080", "base URL for redirection")
 )
 
 func main() {
