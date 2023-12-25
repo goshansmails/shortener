@@ -35,7 +35,7 @@ func TestGetIDHandler(t *testing.T) {
 		},
 	}
 
-	getIDHandler := wrappedGetIDHandler(mockstore.New())
+	getIDHandler := wrappedGetIDHandler(mockstore.New(), "http://localhost:8080")
 
 	for _, test := range tests {
 

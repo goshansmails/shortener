@@ -8,23 +8,33 @@ import (
 )
 
 type Server struct {
-	store store.Store
+	addr    string
+	baseURL string
+	store   store.Store
 }
 
-func New(store store.Store) *Server {
+type Settings struct {
+	Addr    string
+	BaseURL string
+	Store   store.Store
+}
+
+func New(settings Settings) *Server {
 	return &Server{
-		store: store,
+		addr:    settings.Addr,
+		baseURL: settings.BaseURL,
+		store:   settings.Store,
 	}
 }
 
 func (s *Server) Run() error {
 
-	getIDHandler := wrappedGetIDHandler(s.store)
+	getIDHandler := wrappedGetIDHandler(s.store, s.baseURL)
 	getURLHandler := wrappedGetURLHandler(s.store)
 
 	r := chi.NewRouter()
 	r.Post("/", getIDHandler)
 	r.Get("/*", getURLHandler)
 
-	return http.ListenAndServe(`:8080`, r)
+	return http.ListenAndServe(s.addr, r)
 }

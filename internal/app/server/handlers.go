@@ -10,9 +10,7 @@ import (
 	"github.com/goshansmails/shortener/internal/app/store"
 )
 
-const linkFormat = "http://localhost:8080/%d"
-
-func wrappedGetIDHandler(s store.Store) func(resp http.ResponseWriter, req *http.Request) {
+func wrappedGetIDHandler(s store.Store, baseURL string) func(resp http.ResponseWriter, req *http.Request) {
 
 	return func(resp http.ResponseWriter, req *http.Request) {
 
@@ -36,7 +34,7 @@ func wrappedGetIDHandler(s store.Store) func(resp http.ResponseWriter, req *http
 
 		resp.Header().Set("Content-Type", "text/plain")
 		resp.WriteHeader(http.StatusCreated)
-		resp.Write([]byte(fmt.Sprintf(linkFormat, id)))
+		resp.Write([]byte(fmt.Sprintf("%s/%d", baseURL, id)))
 	}
 }
 
@@ -64,7 +62,7 @@ func wrappedGetURLHandler(s store.Store) func(resp http.ResponseWriter, req *htt
 
 func mainHandlerWrapped(s *Server) func(resp http.ResponseWriter, req *http.Request) {
 
-	getIDHandler := wrappedGetIDHandler(s.store)
+	getIDHandler := wrappedGetIDHandler(s.store, s.baseURL)
 	getURLHandler := wrappedGetURLHandler(s.store)
 
 	return func(resp http.ResponseWriter, req *http.Request) {
