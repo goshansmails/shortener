@@ -14,19 +14,41 @@ var (
 	baseURL = flag.String("b", "http://127.0.0.1:8080", "base URL for redirection")
 )
 
+func init() {
+	flag.Parse()
+}
+
 func main() {
 
-	flag.Parse()
-
 	settings := server.Settings{
-		Addr:    *addr,
-		BaseURL: *baseURL,
+		Addr:    getServerAddress(),
+		BaseURL: getBaseURL(),
 		Store:   mapstore.New(),
 	}
 
 	s := server.New(settings)
 	if err := s.Run(); err != nil {
-		fmt.Println("can't run server: ", err)
+		fmt.Println("can't run server:", err)
 		os.Exit(1)
 	}
+}
+
+func getServerAddress() string {
+
+	result := os.Getenv("SERVER_ADDRESS")
+	if result != "" {
+		return result
+	}
+
+	return *addr
+}
+
+func getBaseURL() string {
+
+	result := os.Getenv("BASE_URL")
+	if result != "" {
+		return result
+	}
+
+	return *baseURL
 }
