@@ -28,12 +28,10 @@ func New(settings Settings) *Server {
 }
 
 func (s *Server) Run() error {
-	getIDHandler := wrappedGetIDHandler(s.store, s.baseURL)
-	getURLHandler := wrappedGetURLHandler(s.store)
-
 	r := chi.NewRouter()
-	r.Post("/", getIDHandler)
-	r.Get("/*", getURLHandler)
+
+	r.Post("/", s.ShortenURL)
+	r.Get("/*", s.LongerURL)
 
 	return http.ListenAndServe(s.addr, r)
 }
