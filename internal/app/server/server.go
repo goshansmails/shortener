@@ -28,7 +28,6 @@ func New(settings Settings) *Server {
 }
 
 func (s *Server) Run() error {
-
 	getIDHandler := wrappedGetIDHandler(s.store, s.baseURL)
 	getURLHandler := wrappedGetURLHandler(s.store)
 

@@ -19,7 +19,6 @@ func New() *Store {
 }
 
 func (s *Store) GetID(url string) (int, error) {
-
 	if id, found := s.idForURL[url]; found {
 		return id, nil
 	}
@@ -34,7 +33,6 @@ func (s *Store) GetID(url string) (int, error) {
 }
 
 func (s *Store) GetURL(id int) (string, error) {
-
 	url, found := s.urlForID[id]
 	if !found {
 		return "", errors.New("not found")
@@ -44,7 +42,6 @@ func (s *Store) GetURL(id int) (string, error) {
 }
 
 func (s *Store) AddPair(url string, id int) {
-
 	_, ok1 := s.urlForID[id]
 	_, ok2 := s.idForURL[url]
 	if ok1 || ok2 {

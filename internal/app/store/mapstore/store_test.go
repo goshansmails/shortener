@@ -8,9 +8,6 @@ import (
 )
 
 func TestStoreSuccess(t *testing.T) {
-
-	store := New()
-
 	type Pair struct {
 		url string
 		id  int
@@ -22,7 +19,9 @@ func TestStoreSuccess(t *testing.T) {
 		pairs = append(pairs, Pair{url: fmt.Sprintf("http://sample%d.ru", id), id: id})
 	}
 
+	store := New()
 	size := 1
+
 	for _, pair := range pairs {
 
 		id, err := store.GetID(pair.url)
@@ -54,7 +53,6 @@ func TestStoreSuccess(t *testing.T) {
 }
 
 func TestStoreFail(t *testing.T) {
-
 	store := New()
 
 	for id := 1; id <= 10; id++ {

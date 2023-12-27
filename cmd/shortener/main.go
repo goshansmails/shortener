@@ -19,7 +19,6 @@ func init() {
 }
 
 func main() {
-
 	settings := server.Settings{
 		Addr:    getServerAddress(),
 		BaseURL: getBaseURL(),
@@ -34,7 +33,6 @@ func main() {
 }
 
 func getServerAddress() string {
-
 	result := os.Getenv("SERVER_ADDRESS")
 	if result != "" {
 		return result
@@ -44,7 +42,6 @@ func getServerAddress() string {
 }
 
 func getBaseURL() string {
-
 	result := os.Getenv("BASE_URL")
 	if result != "" {
 		return result

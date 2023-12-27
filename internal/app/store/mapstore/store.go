@@ -23,7 +23,6 @@ func New() *Store {
 }
 
 func (s *Store) GetID(url string) (int, error) {
-
 	s.guard.Lock()
 	defer s.guard.Unlock()
 
@@ -41,7 +40,6 @@ func (s *Store) GetID(url string) (int, error) {
 }
 
 func (s *Store) GetURL(id int) (string, error) {
-
 	s.guard.RLock()
 	defer s.guard.RUnlock()
 

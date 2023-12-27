@@ -11,9 +11,7 @@ import (
 )
 
 func wrappedGetIDHandler(s store.Store, baseURL string) func(resp http.ResponseWriter, req *http.Request) {
-
 	return func(resp http.ResponseWriter, req *http.Request) {
-
 		if req.URL.Path != "/" {
 			resp.WriteHeader(http.StatusBadRequest)
 			return
@@ -39,9 +37,7 @@ func wrappedGetIDHandler(s store.Store, baseURL string) func(resp http.ResponseW
 }
 
 func wrappedGetURLHandler(s store.Store) func(resp http.ResponseWriter, req *http.Request) {
-
 	return func(resp http.ResponseWriter, req *http.Request) {
-
 		path := strings.Trim(req.URL.Path, "/")
 		id, err := strconv.Atoi(path)
 		if err != nil {
@@ -57,23 +53,5 @@ func wrappedGetURLHandler(s store.Store) func(resp http.ResponseWriter, req *htt
 
 		resp.Header().Set("Location", url)
 		resp.WriteHeader(http.StatusTemporaryRedirect)
-	}
-}
-
-func mainHandlerWrapped(s *Server) func(resp http.ResponseWriter, req *http.Request) {
-
-	getIDHandler := wrappedGetIDHandler(s.store, s.baseURL)
-	getURLHandler := wrappedGetURLHandler(s.store)
-
-	return func(resp http.ResponseWriter, req *http.Request) {
-
-		switch req.Method {
-		case http.MethodPost:
-			getIDHandler(resp, req)
-		case http.MethodGet:
-			getURLHandler(resp, req)
-		default:
-			resp.WriteHeader(http.StatusBadRequest)
-		}
 	}
 }

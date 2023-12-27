@@ -15,7 +15,6 @@ import (
 var linkRegExp = regexp.MustCompile("http://localhost:8080/[0-9A-Za-z]+")
 
 func TestGetIDHandler(t *testing.T) {
-
 	type TestCase struct {
 		name string
 		path string
@@ -63,7 +62,6 @@ func TestGetIDHandler(t *testing.T) {
 }
 
 func TestGetURLHandler(t *testing.T) {
-
 	store := mockstore.New()
 
 	store.AddPair("https://ya.ru", 1)
