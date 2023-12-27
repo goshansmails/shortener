@@ -28,8 +28,8 @@ func TestStoreSuccess(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, pair.id, id)
 
-		assert.Equal(t, size, len(store.idForURL))
-		assert.Equal(t, size, len(store.urlForID))
+		assert.Equal(t, size, len(store.urlToID))
+		assert.Equal(t, size, len(store.idToURL))
 		size++
 	}
 
@@ -40,8 +40,8 @@ func TestStoreSuccess(t *testing.T) {
 		assert.NoError(t, err)
 		assert.Equal(t, pair.id, id)
 
-		assert.Equal(t, n, len(store.idForURL))
-		assert.Equal(t, n, len(store.urlForID))
+		assert.Equal(t, n, len(store.urlToID))
+		assert.Equal(t, n, len(store.idToURL))
 	}
 
 	for _, pair := range pairs {

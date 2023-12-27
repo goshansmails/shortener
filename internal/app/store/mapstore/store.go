@@ -6,8 +6,8 @@ import (
 )
 
 type Store struct {
-	idForURL map[string]int
-	urlForID map[int]string
+	urlToID map[string]int
+	idToURL map[int]string
 
 	curID int
 
@@ -16,9 +16,9 @@ type Store struct {
 
 func New() *Store {
 	return &Store{
-		idForURL: make(map[string]int),
-		urlForID: make(map[int]string),
-		curID:    1,
+		urlToID: make(map[string]int),
+		idToURL: make(map[int]string),
+		curID:   1,
 	}
 }
 
@@ -26,15 +26,15 @@ func (s *Store) GetID(url string) (int, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
-	if id, found := s.idForURL[url]; found {
+	if id, found := s.urlToID[url]; found {
 		return id, nil
 	}
 
 	id := s.curID
 	s.curID++
 
-	s.idForURL[url] = id
-	s.urlForID[id] = url
+	s.urlToID[url] = id
+	s.idToURL[id] = url
 
 	return id, nil
 }
@@ -43,7 +43,7 @@ func (s *Store) GetURL(id int) (string, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
-	url, found := s.urlForID[id]
+	url, found := s.idToURL[id]
 	if !found {
 		return "", errors.New("not found")
 	}
