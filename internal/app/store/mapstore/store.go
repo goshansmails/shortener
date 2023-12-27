@@ -11,7 +11,7 @@ type Store struct {
 
 	curID int
 
-	guard sync.RWMutex
+	mu sync.RWMutex
 }
 
 func New() *Store {
@@ -23,8 +23,8 @@ func New() *Store {
 }
 
 func (s *Store) GetID(url string) (int, error) {
-	s.guard.Lock()
-	defer s.guard.Unlock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
 
 	if id, found := s.idForURL[url]; found {
 		return id, nil
@@ -40,8 +40,8 @@ func (s *Store) GetID(url string) (int, error) {
 }
 
 func (s *Store) GetURL(id int) (string, error) {
-	s.guard.RLock()
-	defer s.guard.RUnlock()
+	s.mu.RLock()
+	defer s.mu.RUnlock()
 
 	url, found := s.urlForID[id]
 	if !found {
