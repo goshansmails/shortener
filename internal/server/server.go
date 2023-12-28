@@ -4,19 +4,23 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/goshansmails/shortener/internal/store"
 )
 
 type Server struct {
 	addr    string
 	baseURL string
-	store   store.Store
+	store   Store
 }
 
 type Settings struct {
 	Addr    string
 	BaseURL string
-	Store   store.Store
+	Store   Store
+}
+
+type Store interface {
+	GetID(url string) (int, error)
+	GetURL(id int) (string, error)
 }
 
 func New(settings Settings) *Server {
