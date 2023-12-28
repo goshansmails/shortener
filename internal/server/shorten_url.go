@@ -27,5 +27,5 @@ func (s *Server) ShortenURL(resp http.ResponseWriter, req *http.Request) {
 
 	resp.Header().Set("Content-Type", "text/plain")
 	resp.WriteHeader(http.StatusCreated)
-	resp.Write([]byte(fmt.Sprintf("%s/%d", s.baseURL, id)))
+	_, _ = resp.Write([]byte(fmt.Sprintf("%s/%d", s.baseURL, id)))
 }
