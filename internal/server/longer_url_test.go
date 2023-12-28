@@ -5,7 +5,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/goshansmails/shortener/internal/app/store/mockstore"
+	"github.com/goshansmails/shortener/internal/store/mockstore"
 	"github.com/stretchr/testify/require"
 )
 

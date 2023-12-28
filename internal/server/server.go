@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
-	"github.com/goshansmails/shortener/internal/app/store"
+	"github.com/goshansmails/shortener/internal/store"
 )
 
 type Server struct {

@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/goshansmails/shortener/internal/app/server"
-	"github.com/goshansmails/shortener/internal/app/store/mapstore"
+	"github.com/goshansmails/shortener/internal/server"
+	"github.com/goshansmails/shortener/internal/store/mapstore"
 )
 
 var (
