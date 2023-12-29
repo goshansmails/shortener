@@ -1,10 +1,13 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/goshansmails/shortener/internal/store/storeutils"
 )
 
 func (s *Server) LongerURL(resp http.ResponseWriter, req *http.Request) {
@@ -19,7 +22,9 @@ func (s *Server) LongerURL(resp http.ResponseWriter, req *http.Request) {
 	if err != nil {
 		fmt.Println("can't get url:", err)
 		resp.WriteHeader(http.StatusBadRequest)
-		_, _ = resp.Write([]byte("short URL not found"))
+		if errors.Is(err, storeutils.ErrNotFound) {
+			_, _ = resp.Write([]byte("short URL not found"))
+		}
 		return
 	}
 
