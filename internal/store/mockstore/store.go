@@ -35,7 +35,7 @@ func (s *Store) GetID(url string) (int, error) {
 func (s *Store) GetURL(id int) (string, error) {
 	url, found := s.idToURL[id]
 	if !found {
-		return "", storeutils.GetIdNotFoundErr(id)
+		return "", storeutils.GetIDNotFoundErr(id)
 	}
 
 	return url, nil
