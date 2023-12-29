@@ -5,14 +5,13 @@ import (
 	"fmt"
 	"net/http"
 	"strconv"
-	"strings"
 
+	"github.com/go-chi/chi"
 	"github.com/goshansmails/shortener/internal/store/storeutils"
 )
 
 func (s *Server) LongerURL(resp http.ResponseWriter, req *http.Request) {
-	path := strings.Trim(req.URL.Path, "/")
-	id, err := strconv.Atoi(path)
+	id, err := strconv.Atoi(chi.URLParam(req, "id"))
 	if err != nil {
 		resp.WriteHeader(http.StatusBadRequest)
 		return

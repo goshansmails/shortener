@@ -35,7 +35,7 @@ func (s *Server) Run() error {
 	r := chi.NewRouter()
 
 	r.Post("/", s.ShortenURL)
-	r.Get("/*", s.LongerURL)
+	r.Get("/{id}", s.LongerURL)
 
 	return http.ListenAndServe(s.addr, r)
 }
