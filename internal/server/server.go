@@ -10,6 +10,7 @@ type Server struct {
 	addr    string
 	baseURL string
 	store   Store
+	router  *chi.Mux
 }
 
 type Settings struct {
@@ -24,18 +25,21 @@ type Store interface {
 }
 
 func New(settings Settings) *Server {
-	return &Server{
+	s := &Server{
 		addr:    settings.Addr,
 		baseURL: settings.BaseURL,
 		store:   settings.Store,
 	}
-}
 
-func (s *Server) Run() error {
 	r := chi.NewRouter()
-
 	r.Post("/", s.ShortenURL)
 	r.Get("/{id}", s.LongerURL)
 
-	return http.ListenAndServe(s.addr, r)
+	s.router = r
+
+	return s
+}
+
+func (s *Server) Run() error {
+	return http.ListenAndServe(s.addr, s.router)
 }

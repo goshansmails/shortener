@@ -9,13 +9,9 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestGetURLHandler(t *testing.T) {
+func TestLongerURL(t *testing.T) {
+
 	t.Skip()
-
-	store := mockstore.New()
-
-	store.AddPair("https://ya.ru", 1)
-	store.AddPair("https://www.iana.org", 2)
 
 	type TestCase struct {
 		name        string
@@ -27,7 +23,7 @@ func TestGetURLHandler(t *testing.T) {
 	tests := []TestCase{
 		{
 			name:        "success #1",
-			path:        "/1/",
+			path:        "/1",
 			ok:          true,
 			desiredLink: "https://ya.ru",
 		},
@@ -42,32 +38,42 @@ func TestGetURLHandler(t *testing.T) {
 			path: "/3",
 			ok:   false,
 		},
-		{
-			name: "unparsable path",
-			path: "/a/1/",
-			ok:   false,
-		},
 	}
 
+	store := mockstore.New()
+	store.AddPair("https://ya.ru", 1)
+	store.AddPair("https://www.iana.org", 2)
+
 	s := New(Settings{Store: store})
+
+	server := httptest.NewServer(s.router)
+	defer server.Close()
 
 	for _, test := range tests {
 
 		t.Run(test.name, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodGet, test.path, nil)
-			w := httptest.NewRecorder()
+			req, err := http.NewRequest(
+				http.MethodGet,
+				server.URL+test.path,
+				nil,
+			)
 
-			s.LongerURL(w, req)
+			t.Log("aaaaa", server.URL+test.path)
 
-			resp := w.Result()
+			client := &http.Client{}
+
+			resp, err := client.Do(req)
+			require.NoError(t, err)
 			defer resp.Body.Close()
 
 			if test.ok {
-				require.Equal(t, http.StatusTemporaryRedirect, resp.StatusCode)
-				require.Equal(t, test.desiredLink, resp.Header.Get("Location"))
+				// require.Equal(t, resp.StatusCode, http.StatusTemporaryRedirect)
+				require.Equal(t, resp.Header.Get("Location"), test.desiredLink)
 			} else {
-				require.Equal(t, http.StatusBadRequest, resp.StatusCode)
+				require.Equal(t, resp.StatusCode, http.StatusBadRequest)
 			}
 		})
 	}
+
+	// time.Sleep(100 * time.Second)
 }

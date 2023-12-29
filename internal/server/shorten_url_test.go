@@ -14,23 +14,24 @@ import (
 
 var linkRegExp = regexp.MustCompile("http://localhost:8080/[0-9A-Za-z]+")
 
-func TestGetIDHandler(t *testing.T) {
+func TestShortenURL(t *testing.T) {
 	type TestCase struct {
-		name string
-		path string
-		ok   bool
+		name         string
+		urlToShorten string
 	}
 
 	tests := []TestCase{
 		{
-			name: "success",
-			path: "/",
-			ok:   true,
+			name:         "sample 1",
+			urlToShorten: "https://ya.ru",
 		},
 		{
-			name: "bad path",
-			path: "/a/b/c",
-			ok:   false,
+			name:         "sample 2",
+			urlToShorten: "https://www.iana.org",
+		},
+		{
+			name:         "sample 3",
+			urlToShorten: "https://google.com",
 		},
 	}
 
@@ -39,28 +40,30 @@ func TestGetIDHandler(t *testing.T) {
 		BaseURL: "http://localhost:8080",
 	})
 
+	server := httptest.NewServer(s.router)
+	defer server.Close()
+
 	for _, test := range tests {
 
 		t.Run(test.name, func(t *testing.T) {
-			req := httptest.NewRequest(http.MethodPost, test.path, strings.NewReader("https://ya.ru"))
-			w := httptest.NewRecorder()
+			req, err := http.NewRequest(
+				http.MethodPost,
+				server.URL,
+				strings.NewReader("https://ya.ru"),
+			)
 
-			s.ShortenURL(w, req)
+			client := &http.Client{}
 
-			resp := w.Result()
+			resp, err := client.Do(req)
+			require.NoError(t, err)
 			defer resp.Body.Close()
 
-			if test.ok {
-				require.Equal(t, http.StatusCreated, resp.StatusCode)
-				require.Equal(t, "text/plain", resp.Header.Get("Content-Type"))
+			require.Equal(t, http.StatusCreated, resp.StatusCode)
+			require.Equal(t, "text/plain", resp.Header.Get("Content-Type"))
 
-				body, err := io.ReadAll(resp.Body)
-				require.NoError(t, err)
-				require.True(t, linkRegExp.MatchString(string(body)))
-
-			} else {
-				require.Equal(t, http.StatusBadRequest, resp.StatusCode)
-			}
+			body, err := io.ReadAll(resp.Body)
+			require.NoError(t, err)
+			require.True(t, linkRegExp.MatchString(string(body)))
 		})
 	}
 }

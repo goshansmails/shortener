@@ -7,11 +7,6 @@ import (
 )
 
 func (s *Server) ShortenURL(resp http.ResponseWriter, req *http.Request) {
-	if req.URL.Path != "/" {
-		resp.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
 	body, err := io.ReadAll(req.Body)
 	if err != nil {
 		resp.WriteHeader(http.StatusInternalServerError)
