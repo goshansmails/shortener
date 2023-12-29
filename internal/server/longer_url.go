@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
@@ -16,7 +17,9 @@ func (s *Server) LongerURL(resp http.ResponseWriter, req *http.Request) {
 
 	url, err := s.store.GetURL(id)
 	if err != nil {
+		fmt.Println("can't get url:", err)
 		resp.WriteHeader(http.StatusBadRequest)
+		_, _ = resp.Write([]byte("short URL not found"))
 		return
 	}
 

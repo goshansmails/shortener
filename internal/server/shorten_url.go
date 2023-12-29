@@ -21,6 +21,7 @@ func (s *Server) ShortenURL(resp http.ResponseWriter, req *http.Request) {
 	urlToSave := string(body)
 	id, err := s.store.GetID(urlToSave)
 	if err != nil {
+		fmt.Println("can't get id:", err)
 		resp.WriteHeader(http.StatusInternalServerError)
 		return
 	}

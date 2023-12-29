@@ -1,7 +1,7 @@
 package mockstore
 
 import (
-	"errors"
+	"github.com/goshansmails/shortener/internal/store/storeutils"
 )
 
 type Store struct {
@@ -35,7 +35,7 @@ func (s *Store) GetID(url string) (int, error) {
 func (s *Store) GetURL(id int) (string, error) {
 	url, found := s.idToURL[id]
 	if !found {
-		return "", errors.New("not found")
+		return "", storeutils.GetIdNotFoundErr(id)
 	}
 
 	return url, nil

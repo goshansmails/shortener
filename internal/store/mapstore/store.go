@@ -1,8 +1,9 @@
 package mapstore
 
 import (
-	"errors"
 	"sync"
+
+	"github.com/goshansmails/shortener/internal/store/storeutils"
 )
 
 type Store struct {
@@ -45,7 +46,7 @@ func (s *Store) GetURL(id int) (string, error) {
 
 	url, found := s.idToURL[id]
 	if !found {
-		return "", errors.New("not found")
+		return "", storeutils.GetIdNotFoundErr(id)
 	}
 
 	return url, nil
