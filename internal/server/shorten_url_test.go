@@ -51,6 +51,7 @@ func TestShortenURL(t *testing.T) {
 				server.URL,
 				strings.NewReader("https://ya.ru"),
 			)
+			require.NoError(t, err)
 
 			client := &http.Client{}
 

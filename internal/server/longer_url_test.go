@@ -10,7 +10,6 @@ import (
 )
 
 func TestLongerURL(t *testing.T) {
-
 	t.Skip()
 
 	type TestCase struct {
@@ -57,6 +56,7 @@ func TestLongerURL(t *testing.T) {
 				server.URL+test.path,
 				nil,
 			)
+			require.NoError(t, err)
 
 			t.Log("aaaaa", server.URL+test.path)
 
@@ -67,13 +67,11 @@ func TestLongerURL(t *testing.T) {
 			defer resp.Body.Close()
 
 			if test.ok {
-				// require.Equal(t, resp.StatusCode, http.StatusTemporaryRedirect)
+				require.Equal(t, resp.StatusCode, http.StatusTemporaryRedirect)
 				require.Equal(t, resp.Header.Get("Location"), test.desiredLink)
 			} else {
 				require.Equal(t, resp.StatusCode, http.StatusBadRequest)
 			}
 		})
 	}
-
-	// time.Sleep(100 * time.Second)
 }
