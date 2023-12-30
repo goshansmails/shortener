@@ -35,12 +35,12 @@ func TestShortenURL(t *testing.T) {
 		},
 	}
 
-	s := New(Settings{
+	router := newRouter(newServer(Settings{
 		Store:   mockstore.New(),
 		BaseURL: "http://localhost:8080",
-	})
+	}))
 
-	server := httptest.NewServer(s.router)
+	server := httptest.NewServer(router)
 	defer server.Close()
 
 	for _, test := range tests {

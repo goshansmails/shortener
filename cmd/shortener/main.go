@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"os"
 
 	"github.com/goshansmails/shortener/internal/server"
@@ -20,16 +19,11 @@ func init() {
 
 func main() {
 	settings := server.Settings{
-		Addr:    getServerAddress(),
 		BaseURL: getBaseURL(),
 		Store:   mapstore.New(),
 	}
 
-	s := server.New(settings)
-	if err := s.Run(); err != nil {
-		fmt.Println("can't run server:", err)
-		os.Exit(1)
-	}
+	server.Run(getServerAddress(), settings)
 }
 
 func getServerAddress() string {

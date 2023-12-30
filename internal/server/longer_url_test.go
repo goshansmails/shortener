@@ -43,9 +43,11 @@ func TestLongerURL(t *testing.T) {
 	store.AddPair("https://ya.ru", 1)
 	store.AddPair("https://www.iana.org", 2)
 
-	s := New(Settings{Store: store})
+	router := newRouter(newServer(Settings{
+		Store: store,
+	}))
 
-	server := httptest.NewServer(s.router)
+	server := httptest.NewServer(router)
 	defer server.Close()
 
 	for _, test := range tests {
