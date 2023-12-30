@@ -45,7 +45,7 @@ func (s *Store) AddPair(url string, id int) {
 	_, ok1 := s.idToURL[id]
 	_, ok2 := s.urlToID[url]
 	if ok1 || ok2 {
-		panic("URL of ID already saved")
+		panic("URL or ID already saved")
 	}
 
 	s.idToURL[id] = url
