@@ -10,8 +10,6 @@ import (
 )
 
 func TestLongerURL(t *testing.T) {
-	t.Skip()
-
 	type TestCase struct {
 		name        string
 		path        string
@@ -60,9 +58,12 @@ func TestLongerURL(t *testing.T) {
 			)
 			require.NoError(t, err)
 
-			t.Log("aaaaa", server.URL+test.path)
-
-			client := &http.Client{}
+			// no redirect!
+			client := &http.Client{
+				CheckRedirect: func(req *http.Request, via []*http.Request) error {
+					return http.ErrUseLastResponse
+				},
+			}
 
 			resp, err := client.Do(req)
 			require.NoError(t, err)
